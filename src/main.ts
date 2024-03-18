@@ -4,9 +4,11 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  
   const logger = new Logger('Bootstrap');
-
+  app.enableCors();
+  //app.enableCors( options );
+  //@WebSocketGateway({ cors: true }); // Socket
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({

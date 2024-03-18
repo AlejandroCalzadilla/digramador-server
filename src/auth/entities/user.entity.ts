@@ -1,8 +1,13 @@
+import { Proyecto } from 'src/proyecto/entities/proyecto.entity';
+import { ProyectoToUser } from 'src/proyecto/entities/ProyectoToUser.entity';
 import {
   BeforeInsert,
   BeforeUpdate,
   Column,
   Entity,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -40,6 +45,19 @@ export class User {
   })
   roles: string[];
  
+  @OneToMany(
+   ()=>Proyecto,(proyects)=>proyects.user,
+   {cascade:true,eager:true}
+  ) 
+  proyects?:Proyecto[]
+
+
+   @OneToMany(() =>ProyectoToUser,(proyectotouser) =>proyectotouser.user)
+    proyectotouser?: ProyectoToUser[];
+
+
+
+
   @BeforeInsert() //trigger
   checkFieldsBeforeInsert() {
     this.email = this.email.toLowerCase().trim();

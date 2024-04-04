@@ -1,35 +1,25 @@
-import { IsPositive, IsString, IsUUID, MinLength } from "class-validator";
+import { IsDate, IsJSON, IsPositive, IsString, IsUUID, MinLength, isUUID } from "class-validator";
+import { UUID } from "crypto";
 
 export class CreateProyectoDto {
 
-
  @IsString()
  @MinLength(7)
- ttitle:string;
+ title:string;
 
  @IsString()
- tittle:string;
+ description:string;
 
 
-@IsUUID()
+ @IsDate()
+ created:Date;
+
+
+ @IsDate()
+ updated:Date;
+
+@IsString()
  userid:string;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
+ 
 }

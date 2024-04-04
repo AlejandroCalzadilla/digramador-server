@@ -17,6 +17,9 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
+
+
+  
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -47,14 +50,15 @@ export class AuthService {
     const { password, email } = loginUserDto;
     const user = await this.userRepository.findOne({
       where: { email },
-      select: { email: true, password: true, id: true },
+      select: { email: true, password: true, id: true ,name:true ,lastName:true},
+      
     });
     if (!user)
       throw new UnauthorizedException('Credentials are not valid(email)');
 
     if (!bcrypt.compareSync(password, user.password))
       throw new UnauthorizedException('Credentials are not valid(password)');
-
+     console.log('correctox2')
     return {
       ...user,
       token: this.getJwtToken({ id: user.id }),

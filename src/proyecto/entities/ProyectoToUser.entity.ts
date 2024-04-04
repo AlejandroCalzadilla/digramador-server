@@ -16,6 +16,11 @@ export class ProyectoToUser {
       })  
       proyectoid:string 
 
+   
+    
+     
+
+
 
   
   @ManyToOne(() => User, (user) => user.proyectotouser ,{

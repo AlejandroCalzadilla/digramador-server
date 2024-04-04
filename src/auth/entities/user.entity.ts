@@ -46,8 +46,8 @@ export class User {
   roles: string[];
  
   @OneToMany(
-   ()=>Proyecto,(proyects)=>proyects.user,
-   {cascade:true,eager:true}
+   ()=>Proyecto,(proyects)=>proyects.userid,
+   {cascade:true,eager:false}
   ) 
   proyects?:Proyecto[]
 

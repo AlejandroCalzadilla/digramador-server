@@ -43,12 +43,12 @@ export class Proyecto {
     @Column({
       nullable:true
     }) 
-     created:Date
+     created:string
 
      @Column({
       nullable:true
     })
-     updated:Date
+     updated:string
      
 
 
@@ -78,7 +78,9 @@ export class Proyecto {
       uniqueItems:false
       // si es nulleable podes poner default:null
      })
-     @Column('text') 
+     @Column('text',{
+      nullable:true
+     }) 
      data: string;
 
 

@@ -28,6 +28,17 @@ export class ProyectoController {
     return this.proyectoService.create(jsonAsString, datos);
   }
 
+
+
+
+
+  @Patch('/nodes')
+  updateNodes(@Body() data: any,@Query('id') id:string) {
+  //  console.log(data,id,'entra a nodes o nel')
+    const jsonAsString = JSON.stringify(data);
+    return this.proyectoService.updateNode(jsonAsString,id);  
+  }
+
   
 
   @Get()
@@ -51,39 +62,28 @@ export class ProyectoController {
   @Get('firstFive')
   firstFive(@Query('userid') userid:string  ){
     return this.proyectoService.findFirstFive(userid)
-
   }
-
-
 
 
   @Auth() 
   @Get('/invitados:id')
   findInvitados(@Param('id') id: string) {
-    return this.proyectoService.findOne(id);
+    return this.proyectoService.findOneIntermedia(id);
   }
 
   
+
+  @Get('/ids')
+  findOnById(@Query('id') id: string) {
+   //console.log('entra a buscar el proyectos')
+    return this.proyectoService.findOneP(id);
+  }
  
   @Get('user')
   findOnByUser(@Query('id') id: string) {
     return this.proyectoService.findOnebyUser(id);
   }
 
-
-
-  @Get('unir')
-  async unirse(@Query('token') token: string) {
-    // Procesar el token recibido
-    //const resultado = await this.proyectoService.procesarInvitacion(token);
-    //return resultado;
-  }
-
-  
-  @Get('open-diagram')
-  openDiagram(@Query() algo: any) {
-    console.log(algo);
-  }
 
 
   @Get('secure-url')
@@ -97,9 +97,6 @@ export class ProyectoController {
     return `Welcome! Your user ID is: ${userId}`;
   }
 
-
-
-  
 
 
   @Auth()

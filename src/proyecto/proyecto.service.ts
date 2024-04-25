@@ -99,18 +99,35 @@ export class ProyectoService {
     
   }
 
-  async findOne(proyecto: string) {
+  async findOneIntermedia(proyectoid: string) {
     
     const  producto= this.proyectotouserRepository.createQueryBuilder('proyecto_user')
      // Se seleccionan solo dos campos
      .where( 'proyectoid=:proyectoid', {
-       proyectoid:proyecto,
+       proyectoid:proyectoid,
      })
      .getMany()
     return producto
    
   }
 
+  async findOneP(id:string){
+    const product=await this.proyectoRepository.findOneBy({id:id})
+    //console.log(product, 'no da o que')
+    return product;
+  }
+
+  async updateNode(data:string,id:string){
+    console.log(data,id)
+    const currentDate = DateTime.now().setZone('America/La_Paz');
+    const nodo = await this.proyectoRepository.findOneBy({id:id});
+  
+    nodo.data = data;
+    nodo.updated=currentDate
+    const nodoActualizado = await this.proyectoRepository.save(nodo);
+     console.log(nodoActualizado,'nodo actualizado')
+    return nodoActualizado
+  }
    
   async findOnebyUser(id: string) {
     console.log('prueba')
@@ -134,8 +151,8 @@ export class ProyectoService {
      .where( 'userid=:userid', {
        userid:id,
      })     
-     .orderBy('updated', 'DESC')
-     .take(6)
+     .orderBy('updated', 'ASC')
+     .take(5)
      .getMany()
      //console.log('entro ',producto)
     return producto

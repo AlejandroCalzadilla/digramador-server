@@ -13,8 +13,6 @@ export class MessageWsService {
    //cuando se conecta el cliente 
    registerClient(client:Socket){
     this.connectedClients[client.id]=client
-     
-
    }
 
    //cuando se desconecta el cliente 
@@ -22,11 +20,8 @@ export class MessageWsService {
      delete this.connectedClients[clientId]
    }
  
-
-
    //conteo de clientes
    getConectedClients():string[] {
-
     return Object.keys(this.connectedClients);
    }
 

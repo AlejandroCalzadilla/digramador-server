@@ -55,7 +55,7 @@ export class MessageWsGateway implements OnGatewayConnection , OnGatewayDisconne
     //     message:payload  || ' no message'
     //  })
     this.sala=payload.diagramId
-    console.log(payload.diagramId,'aver como llega')
+    //console.log(payload.diagramId,'aver como llega')
     //emitir a todos menos al cliente inicial 
     // client.broadcast.emit('message-form-server',{
     //    //fullname:'soy yo',
@@ -72,12 +72,7 @@ export class MessageWsGateway implements OnGatewayConnection , OnGatewayDisconne
          payload
     })
 
-     
-    //a todos 
-    // this.wss.emit('diagramUpdated',{
-    //    payload
-    // })
-
+ 
           
 
   }

@@ -11,15 +11,15 @@ export class CreateProyectoDto {
  description:string;
 
 
- @IsDate()
- created:Date;
-
-
- @IsDate()
- updated:Date;
-
-@IsString()
+ @IsString()
  userid:string;
- 
- 
+
+ @IsString()
+ sala:string;
+
+ @IsString()
+ tipo:string;
+
+ @IsJSON()
+ data?: any;
 }

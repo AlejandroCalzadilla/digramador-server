@@ -11,4 +11,4 @@ services:
       POSTGRES_DB: ${DB_NAME}
     container_name: paricalsw1Ale
     volumes:
-      - ./postgres:/var/lib/postgresql
+      - ./postgres:/var/lib/postgresqlnp

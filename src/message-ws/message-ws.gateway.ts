@@ -1,94 +1,82 @@
 import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { MessageWsService } from './message-ws.service';
-import {  NewMessageDto } from './dto/create-message-w.dto';
-
+import { NewMessageDto } from './dto/create-message-w.dto';
 import { Server, Socket } from 'socket.io';
-import { subscribe } from 'diagnostics_channel';
-@WebSocketGateway({cors:true})
-export class MessageWsGateway implements OnGatewayConnection , OnGatewayDisconnect {
+
+@WebSocketGateway({
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST'],
+    credentials: true
+  },
+  pingTimeout: 60000,
+  pingInterval: 25000,
+  path: '/socket.io'
+})
+export class MessageWsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   
-  sala:string
-  @WebSocketServer() wss:Server;//info de todos los clientes conectados
+  @WebSocketServer() wss: Server;
+  
   constructor(private readonly messagesWsService: MessageWsService) {}
 
-
-
-
-
-  //cuando se conecta el cliente
-  handleConnection(client: Socket, ) {
-
-    //console.log(client.id,'que envia')
-    //console.log({conectados:this.messagesWsService.getConectedClients()}) 
-
-     //cuando un cliente se conecta 
+  handleConnection(client: Socket) {
     this.messagesWsService.registerClient(client);
- 
-
-     //emitir los clientes conectados a todos los clientes
-     //despues de la coma se puede enviar lo que uno quiera 
-     this.wss.emit('clients-updated',this.messagesWsService.getConectedClients());
-    
-    
-
-      
-    //console.log({conectados:this.messagesWsService.getConectedClients()})
-     console.log('cliente conectado',client.id)
+    this.wss.emit('clients-updated', this.messagesWsService.getConectedClients());
+    console.log('Cliente conectado:', client.id);
   }
 
-
-  //cuando se desconecta el cliente
-  handleDisconnect(client:Socket) {
-      this.messagesWsService.removeClient(client.id)
-
-      this.wss.emit('clients-updated',this.messagesWsService.getConectedClients())
-    //console.log('cliente desconectado',client.id)
+  handleDisconnect(client: Socket) {
+    this.messagesWsService.removeClient(client.id);
+    this.wss.emit('clients-updated', this.messagesWsService.getConectedClients());
+    console.log('Cliente desconectado:', client.id);
   }
 
-  @SubscribeMessage('updateDiagram')
-  onMessageFromClient(client:Socket,payload:any){
-    //console.log(payload,'datos del diagram')
+  @SubscribeMessage('join-room')
+  handleJoinRoom(client: Socket, roomId: string) {
+    client.join(roomId);
+    this.messagesWsService.initializeRoom(roomId);
+    console.log(`Cliente ${client.id} se unió a la sala ${roomId}`);
+    return { success: true, roomId };
+  }
 
-    /// para devolver mensaje a al mismo usuario solo emite al mismo
-    //  client.emit('message',{
-    //     fullname:'soy yo',
-    //     message:payload  || ' no message'
-    //  })
-    this.sala=payload.diagramId
-    //console.log(payload.diagramId,'aver como llega')
-    //emitir a todos menos al cliente inicial 
-    // client.broadcast.emit('message-form-server',{
-    //    //fullname:'soy yo',
-    //   //    message:payload  || ' no message'
-    // })
+  @SubscribeMessage('editor-update')
+  handleEditorUpdate(client: Socket, payload: any) {
+    const { roomId, pageIndex, components, styles, timestamp } = payload;
     
-
-  /*   client.broadcast.to(this.sala).emit('diagramUpdated',{
-     
-         payload
-    }) */
-    client.broadcast.emit('diagramUpdated',{
-     
-         payload
-    })
-
- 
-          
-
+    if (client.rooms.has(roomId)) {
+      client.to(roomId).emit('editor-update', {
+        roomId,
+        pageIndex,
+        components,
+        styles,
+        timestamp
+      });
+    }
   }
 
+  @SubscribeMessage('page-change')
+  handlePageChange(client: Socket, payload: any) {
+    const { roomId, pageIndex, totalPages, pages, pagescss } = payload;
+    
+    if (client.rooms.has(roomId)) {
+      // Actualizar el estado de las páginas en la sala
+      if (totalPages > this.messagesWsService.getRoomPages(roomId)?.pages.length) {
+        this.messagesWsService.updateRoomPages(roomId, pages, pagescss);
+      }
 
-
-  //message-from-client
+      // Reenviar los datos a todos los clientes en la misma sala
+      client.to(roomId).emit('page-change', {
+        roomId,
+        pageIndex,
+        totalPages,
+        pages: this.messagesWsService.getRoomPages(roomId)?.pages,
+        pagescss: this.messagesWsService.getRoomPages(roomId)?.pagescss
+      });
+    }
+  }
 
   @SubscribeMessage('message-from-client')
-  handleMessageFromClient(client:Socket,payload:NewMessageDto){
-   
-     console.log(payload)
-
+  handleMessageFromClient(client: Socket, payload: NewMessageDto) {
+    console.log('Mensaje recibido:', payload);
   }
-
-
-
-
 }

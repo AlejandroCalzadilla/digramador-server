@@ -4,7 +4,8 @@ import { ProyectoToUser } from "./ProyectoToUser.entity";
 
 export enum TipoProyecto {
   BOCETO = 'boceto',
-  FIGMA = 'figma'
+  FIGMA = 'figma',
+  FLUUTERFIGMA = 'flutterfigma',
 }
 
 @Entity()

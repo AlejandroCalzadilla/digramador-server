@@ -7,6 +7,7 @@ import { SeedModule } from './seed/seed.module';
 import { ProyectoModule } from './proyecto/proyecto.module';
 import { FilesModule } from './files/files.module';
 import { MessageWsModule } from './message-ws/message-ws.module';
+import { GenericoFlutterModule } from './generico_fluuter/generico-flutter.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { MessageWsModule } from './message-ws/message-ws.module';
     ProyectoModule,
     FilesModule,
     MessageWsModule,
+    GenericoFlutterModule,
   ],
 })
 export class AppModule {}

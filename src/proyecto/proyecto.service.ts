@@ -1,16 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProyectoDto } from './dto/create-proyecto.dto';
-import { UpdateProyectoDto } from './dto/update-proyecto.dto';
-import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { Proyecto, TipoProyecto } from './entities/proyecto.entity';
 import { DataSource, QueryBuilder, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProyectoToUser } from './entities/ProyectoToUser.entity';
-import { UUID } from 'crypto';
 import { JwtService } from '@nestjs/jwt';
-import { JwtStrategy } from 'src/auth/strategies/jwt.strategy';
-import { User } from 'src/auth/entities/user.entity';
-import { ConfigService } from '@nestjs/config';
 import { DateTime } from 'luxon';
 
 @Injectable()

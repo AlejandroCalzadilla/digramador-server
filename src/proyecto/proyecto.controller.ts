@@ -21,8 +21,9 @@ export class ProyectoController {
 
   
 
-  @Patch('/nodes')
-  updateNodes(@Body() data: any,@Query('id') id:string) {
+  @Post('/nodes')
+  updateNodes(@Body() data:any,@Query('id') id:string) {
+    console.log('data', data);
     const jsonAsString = JSON.stringify(data);
     return this.proyectoService.updateNode(jsonAsString,id);  
   }
